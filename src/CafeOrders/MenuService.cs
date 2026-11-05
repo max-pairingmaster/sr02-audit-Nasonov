@@ -32,19 +32,12 @@ public class MenuService
         // R10: Move Method - розрахунок суми винесено в Order.CalculateSubtotal()
         decimal sum = order.CalculateSubtotal();
 
-        // Happy hour check: 14:00 - 16:00
+        // R01: Extract Method (ApplyHappyHour)
         var currentTime = now ?? DateTimeOffset.Now;
-        var currentHour = currentTime.Hour;
-        if (currentHour >= 14 && currentHour < 16)
-        {
-            sum -= sum * HappyHourDiscountRate;
-        }
+        sum -= ApplyHappyHour(sum, currentTime);
 
-        // R04: Замінено 0.10 на ServiceFeeRate
-        if (order.Lines.Count > ServiceFeeItemThreshold)
-        {
-            sum += sum * ServiceFeeRate;
-        }
+        // Service fee
+        sum += CalculateServiceFee(order, sum);
 
         if (!string.IsNullOrEmpty(promoCode))
         {
@@ -57,6 +50,26 @@ public class MenuService
         }
 
         return sum;
+    }
+
+    // R01: Extract Method (ApplyHappyHour)
+    private decimal ApplyHappyHour(decimal amount, DateTimeOffset currentTime)
+    {
+        var hour = currentTime.Hour;
+        if (hour >= 14 && hour < 16)
+        {
+            return amount * HappyHourDiscountRate;
+        }
+        return 0m;
+    }
+
+    private decimal CalculateServiceFee(Order order, decimal amount)
+    {
+        if (order.Lines.Count > ServiceFeeItemThreshold)
+        {
+            return amount * ServiceFeeRate;
+        }
+        return 0m;
     }
 
     // R06: Replace Nested Conditional with Guard Clauses
