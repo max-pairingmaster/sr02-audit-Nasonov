@@ -31,26 +31,25 @@ public class MenuService
         }
 
         // R10: Move Method - розрахунок суми винесено в Order.CalculateSubtotal()
-        decimal sum = order.CalculateSubtotal();
+        decimal subtotal = order.CalculateSubtotal();
 
-        // R01: Extract Method (ApplyHappyHour)
+        // R01: Extract Method (ApplyHappyHour) & R03: Extract Variable
         var currentTime = now ?? DateTimeOffset.Now;
-        sum -= ApplyHappyHour(sum, currentTime);
+        decimal happyHourDiscount = ApplyHappyHour(subtotal, currentTime);
+        decimal amountAfterHappyHour = subtotal - happyHourDiscount;
 
-        // Service fee
-        sum += CalculateServiceFee(order, sum);
+        // R03: Extract Variable for service fee
+        decimal serviceFee = CalculateServiceFee(order, amountAfterHappyHour);
+        decimal totalWithFee = amountAfterHappyHour + serviceFee;
 
         if (!promoCode.IsEmpty)
         {
-            decimal promoDiscount = _discountCalculator.CalculatePromoDiscount(promoCode, sum);
-            sum -= promoDiscount;
-            if (sum < 0)
-            {
-                sum = 0;
-            }
+            decimal promoDiscount = _discountCalculator.CalculatePromoDiscount(promoCode, totalWithFee);
+            decimal discountedTotal = totalWithFee - promoDiscount;
+            return discountedTotal < 0 ? 0m : discountedTotal;
         }
 
-        return sum;
+        return totalWithFee;
     }
 
     [Obsolete("Use CalculateTotalBill instead")]
