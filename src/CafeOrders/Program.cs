@@ -27,13 +27,13 @@ public class Program
         Console.WriteLine($"Order lines count: {order.Lines.Count}");
         Console.WriteLine($"Order valid: {service.ValidateOrder(order)}");
 
-        decimal totalRegular = service.Total(order);
+        decimal totalRegular = service.CalculateTotalBill(order);
         Console.WriteLine($"Total (Regular): {totalRegular:F2}");
 
-        decimal totalGold = service.Total(order, "GOLD2026");
+        decimal totalGold = service.CalculateTotalBill(order, "GOLD2026");
         Console.WriteLine($"Total (GOLD2026 Promo): {totalGold:F2}");
 
-        decimal totalSilver = service.Total(order, "SILVER2026");
+        decimal totalSilver = service.CalculateTotalBill(order, "SILVER2026");
         Console.WriteLine($"Total (SILVER2026 Promo): {totalSilver:F2}");
 
         decimal tax = service.CalculateTax(totalRegular);

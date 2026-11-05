@@ -21,8 +21,8 @@ public class MenuService
     // D-03: Довгий метод (LOC ~ 65, CC = 14, глибина вкладеності 5)
     // D-04: Магічні числа (0.10m, 0.15m)
     // D-12: Довгий ланцюг if-else
-    // R06: Replace Nested Conditional with Guard Clauses
-    public decimal Total(Order order, string promoCode = "", DateTimeOffset? now = null)
+    // R02: Rename (Total -> CalculateTotalBill)
+    public decimal CalculateTotalBill(Order order, string promoCode = "", DateTimeOffset? now = null)
     {
         if (order == null || order.Lines == null || order.Lines.Count == 0)
         {
@@ -51,6 +51,10 @@ public class MenuService
 
         return sum;
     }
+
+    [Obsolete("Use CalculateTotalBill instead")]
+    public decimal Total(Order order, string promoCode = "", DateTimeOffset? now = null)
+        => CalculateTotalBill(order, promoCode, now);
 
     // R01: Extract Method (ApplyHappyHour)
     private decimal ApplyHappyHour(decimal amount, DateTimeOffset currentTime)
@@ -116,7 +120,7 @@ public class MenuService
         }
 
         sb.AppendLine("----------------------------------------");
-        decimal total = Total(order, promoCode);
+        decimal total = CalculateTotalBill(order, promoCode);
         decimal tax = CalculateTax(total);
 
         // Повторення форматування сум
