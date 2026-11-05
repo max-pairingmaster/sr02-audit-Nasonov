@@ -2,24 +2,24 @@ namespace CafeOrders;
 
 public class DiscountCalculator
 {
-    // D-06: Одержимість примітивами (код - string)
-    public decimal CalculatePromoDiscount(string promoCode, decimal subtotal)
+    // R12: Replace Primitive with Value Obj (PromoCode)
+    public decimal CalculatePromoDiscount(PromoCode promoCode, decimal subtotal)
     {
-        if (string.IsNullOrWhiteSpace(promoCode))
+        if (promoCode.IsEmpty)
         {
             return 0m;
         }
 
-        // Chained string parsing
-        if (promoCode.Equals("GOLD2026", StringComparison.OrdinalIgnoreCase))
+        string code = promoCode.Value.ToUpperInvariant();
+        if (code == "GOLD2026")
         {
             return subtotal * 0.15m;
         }
-        else if (promoCode.Equals("SILVER2026", StringComparison.OrdinalIgnoreCase))
+        else if (code == "SILVER2026")
         {
             return subtotal * 0.10m;
         }
-        else if (promoCode.Equals("WELCOME", StringComparison.OrdinalIgnoreCase))
+        else if (code == "WELCOME")
         {
             return subtotal >= 100m ? 20m : 0m;
         }

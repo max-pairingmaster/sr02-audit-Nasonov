@@ -22,7 +22,8 @@ public class MenuService
     // D-04: Магічні числа (0.10m, 0.15m)
     // D-12: Довгий ланцюг if-else
     // R02: Rename (Total -> CalculateTotalBill)
-    public decimal CalculateTotalBill(Order order, string promoCode = "", DateTimeOffset? now = null)
+    // R12: Replace Primitive with Value Obj (PromoCode)
+    public decimal CalculateTotalBill(Order order, PromoCode promoCode = default, DateTimeOffset? now = null)
     {
         if (order == null || order.Lines == null || order.Lines.Count == 0)
         {
@@ -39,7 +40,7 @@ public class MenuService
         // Service fee
         sum += CalculateServiceFee(order, sum);
 
-        if (!string.IsNullOrEmpty(promoCode))
+        if (!promoCode.IsEmpty)
         {
             decimal promoDiscount = _discountCalculator.CalculatePromoDiscount(promoCode, sum);
             sum -= promoDiscount;
@@ -53,7 +54,7 @@ public class MenuService
     }
 
     [Obsolete("Use CalculateTotalBill instead")]
-    public decimal Total(Order order, string promoCode = "", DateTimeOffset? now = null)
+    public decimal Total(Order order, PromoCode promoCode = default, DateTimeOffset? now = null)
         => CalculateTotalBill(order, promoCode, now);
 
     // R01: Extract Method (ApplyHappyHour)
@@ -101,7 +102,7 @@ public class MenuService
     }
 
     // D-05: Дублювання форматування
-    public string PrintReceipt(Order order, string promoCode = "")
+    public string PrintReceipt(Order order, PromoCode promoCode = default)
     {
         var sb = new StringBuilder();
         sb.AppendLine("========================================");
