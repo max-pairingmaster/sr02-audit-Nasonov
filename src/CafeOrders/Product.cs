@@ -13,8 +13,6 @@ public class Product
         Category = category;
     }
 
-    // D-10: Коментар-виправдання (excuse comment)
-    // TODO: Quick hack to sync price with legacy discount system, do not remove!
     public void ChangePrice(decimal newPrice, bool notify)
     {
         if (newPrice < 0)

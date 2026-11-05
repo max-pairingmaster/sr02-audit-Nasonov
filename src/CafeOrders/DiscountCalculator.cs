@@ -2,16 +2,6 @@ namespace CafeOrders;
 
 public class DiscountCalculator
 {
-    // D-11: Мертвий код (закоментований метод)
-    /*
-    public decimal CalculateLegacyDiscount(decimal total, int customerYears)
-    {
-        if (customerYears > 5) return total * 0.20m;
-        if (customerYears > 2) return total * 0.10m;
-        return total * 0.05m;
-    }
-    */
-
     // D-06: Одержимість примітивами (код - string)
     public decimal CalculatePromoDiscount(string promoCode, decimal subtotal)
     {
