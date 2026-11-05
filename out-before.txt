@@ -1,0 +1,23 @@
+=== CAFE ORDERS SYSTEM ===
+Order lines count: 3
+Order valid: True
+Total (Regular): 255.00
+Total (GOLD2026 Promo): 216.75
+Total (SILVER2026 Promo): 229.50
+Tax on regular: 17.85
+
+--- RECEIPT OUTPUT ---
+========================================
+             CAFE ORDERS RECEIPT        
+========================================
+Order ID: 11111111-2222-3333-4444-555555555555
+Date: 2026-11-05 12:00
+----------------------------------------
+Espresso               2 x    40.00 =    80.00
+Cappuccino             1 x    65.00 =    65.00
+Croissant              2 x    55.00 =   110.00
+----------------------------------------
+Tax (7%):                                15.17
+TOTAL TO PAY:                           231.92
+========================================
+=== END OF EXECUTION ===
