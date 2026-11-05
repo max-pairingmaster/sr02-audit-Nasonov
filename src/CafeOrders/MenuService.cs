@@ -4,6 +4,10 @@ namespace CafeOrders;
 
 public class MenuService
 {
+    public const decimal ServiceFeeRate = 0.10m;
+    public const decimal HappyHourDiscountRate = 0.15m;
+    public const int ServiceFeeItemThreshold = 5;
+
     private readonly DiscountCalculator _discountCalculator;
     private readonly DatabaseDummy _database;
 
@@ -40,22 +44,21 @@ public class MenuService
                         }
                     }
 
-                    // Happy hour check: 14:00 - 16:00 (використовуємо шов now замість прямого DateTime.Now)
+                    // Happy hour check: 14:00 - 16:00
                     var currentTime = now ?? DateTimeOffset.Now;
                     var currentHour = currentTime.Hour;
                     if (currentHour >= 14)
                     {
                         if (currentHour < 16)
                         {
-                            // D-04: Магічне число 0.15m
-                            sum -= sum * 0.15m;
+                            sum -= sum * HappyHourDiscountRate;
                         }
                     }
 
-                    // D-04: Магічне число 0.10m (сервісний збір якщо більше 5 позицій)
-                    if (order.Lines.Count > 5)
+                    // R04: Замінено 0.10 на ServiceFeeRate
+                    if (order.Lines.Count > ServiceFeeItemThreshold)
                     {
-                        sum += sum * 0.10m;
+                        sum += sum * ServiceFeeRate;
                     }
 
                     if (!string.IsNullOrEmpty(promoCode))
