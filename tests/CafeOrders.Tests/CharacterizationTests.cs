@@ -11,7 +11,7 @@ public class CharacterizationTests
     public void Total_PromoCodeInvalid_ReturnsZeroDiscount()
     {
         var order = new Order();
-        order.Lines.Add(new OrderLine(new Product("Coffee", 50), 2));
+        order.AddLine(new OrderLine(new Product("Coffee", 50), 2));
         var service = new MenuService();
         // Характеризаційний тест: зараз система замість викидання винятку
         // на невірний промокод мовчки не дає знижки і повертає базову суму 100.
@@ -34,7 +34,7 @@ public class CharacterizationTests
     public void Total_SimpleOrder_ReturnsCorrectSubtotal()
     {
         var order = new Order();
-        order.Lines.Add(new OrderLine(new Product("Tea", 30), 2));
+        order.AddLine(new OrderLine(new Product("Tea", 30), 2));
         var service = new MenuService();
         var fixedTime = new DateTimeOffset(2026, 1, 1, 11, 0, 0, TimeSpan.Zero);
         var actual = service.Total(order, now: fixedTime);
@@ -46,7 +46,7 @@ public class CharacterizationTests
     public void Total_HappyHour_AppliesDiscount()
     {
         var order = new Order();
-        order.Lines.Add(new OrderLine(new Product("Latte", 100), 1));
+        order.AddLine(new OrderLine(new Product("Latte", 100), 1));
         var service = new MenuService();
         var happyHourTime = new DateTimeOffset(2026, 1, 1, 14, 30, 0, TimeSpan.Zero);
         var actual = service.Total(order, now: happyHourTime);
@@ -60,7 +60,7 @@ public class CharacterizationTests
         var order = new Order();
         for (int i = 0; i < 6; i++)
         {
-            order.Lines.Add(new OrderLine(new Product($"Item{i}", 10), 1));
+            order.AddLine(new OrderLine(new Product($"Item{i}", 10), 1));
         }
         var service = new MenuService();
         var fixedTime = new DateTimeOffset(2026, 1, 1, 10, 0, 0, TimeSpan.Zero);
@@ -74,7 +74,7 @@ public class CharacterizationTests
     public void Total_GoldLoyaltyPromo_AppliesFifteenPercentDiscount()
     {
         var order = new Order();
-        order.Lines.Add(new OrderLine(new Product("Special Cake", 200), 1));
+        order.AddLine(new OrderLine(new Product("Special Cake", 200), 1));
         var service = new MenuService();
         var fixedTime = new DateTimeOffset(2026, 1, 1, 10, 0, 0, TimeSpan.Zero);
         var actual = service.Total(order, "GOLD2026", fixedTime);
@@ -87,7 +87,7 @@ public class CharacterizationTests
     public void Total_SilverLoyaltyPromo_AppliesTenPercentDiscount()
     {
         var order = new Order();
-        order.Lines.Add(new OrderLine(new Product("Juice", 50), 2));
+        order.AddLine(new OrderLine(new Product("Juice", 50), 2));
         var service = new MenuService();
         var fixedTime = new DateTimeOffset(2026, 1, 1, 10, 0, 0, TimeSpan.Zero);
         var actual = service.Total(order, "SILVER2026", fixedTime);
@@ -102,7 +102,7 @@ public class CharacterizationTests
         var order = new Order();
         for (int i = 0; i < 6; i++)
         {
-            order.Lines.Add(new OrderLine(new Product($"Item{i}", 100), 1));
+            order.AddLine(new OrderLine(new Product($"Item{i}", 100), 1));
         }
         var service = new MenuService();
         var happyHourTime = new DateTimeOffset(2026, 1, 1, 15, 0, 0, TimeSpan.Zero);
@@ -116,7 +116,7 @@ public class CharacterizationTests
     public void PrintReceipt_ContainsOrderDetailsAndTax()
     {
         var order = new Order();
-        order.Lines.Add(new OrderLine(new Product("Americano", 40), 1));
+        order.AddLine(new OrderLine(new Product("Americano", 40), 1));
         var service = new MenuService();
         string receipt = service.PrintReceipt(order);
         Assert.Contains("CAFE ORDERS RECEIPT", receipt);
