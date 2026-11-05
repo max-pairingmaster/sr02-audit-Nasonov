@@ -17,7 +17,8 @@ public class MenuService
     // D-03: Довгий метод (LOC ~ 65, CC = 14, глибина вкладеності 5)
     // D-04: Магічні числа (0.10m, 0.15m)
     // D-12: Довгий ланцюг if-else
-    public decimal Total(Order order, string promoCode = "")
+    // Прорізано шов (Seam) через введення опціонального параметра DateTimeOffset? now = null
+    public decimal Total(Order order, string promoCode = "", DateTimeOffset? now = null)
     {
         if (order != null)
         {
@@ -39,8 +40,9 @@ public class MenuService
                         }
                     }
 
-                    // Happy hour check: 14:00 - 16:00 (тісно пов'язаний з DateTime.Now)
-                    var currentHour = DateTime.Now.Hour;
+                    // Happy hour check: 14:00 - 16:00 (використовуємо шов now замість прямого DateTime.Now)
+                    var currentTime = now ?? DateTimeOffset.Now;
+                    var currentHour = currentTime.Hour;
                     if (currentHour >= 14)
                     {
                         if (currentHour < 16)
