@@ -104,6 +104,9 @@ public class MenuService
     // D-05: Дублювання форматування
     public string PrintReceipt(Order order, PromoCode promoCode = default)
     {
+        // R18: Introduce Guard (ThrowIfNull)
+        ArgumentNullException.ThrowIfNull(order);
+
         var sb = new StringBuilder();
         sb.AppendLine("========================================");
         sb.AppendLine("             CAFE ORDERS RECEIPT        ");

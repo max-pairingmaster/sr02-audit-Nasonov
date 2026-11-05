@@ -9,6 +9,13 @@ public class OrderLine
 
     public OrderLine(Product product, int quantity)
     {
+        // R18: Introduce Guard (ThrowIfNull)
+        ArgumentNullException.ThrowIfNull(product);
+        if (quantity < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity cannot be negative");
+        }
+
         Product = product;
         Quantity = quantity;
     }

@@ -20,10 +20,9 @@ public class Order
 
     public void AddLine(OrderLine line)
     {
-        if (line != null)
-        {
-            _lines.Add(line);
-        }
+        // R18: Introduce Guard (ThrowIfNull)
+        ArgumentNullException.ThrowIfNull(line);
+        _lines.Add(line);
     }
 
     // R10: Move Method (сумування рядків у Order)
