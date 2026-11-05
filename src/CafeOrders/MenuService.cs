@@ -21,102 +21,66 @@ public class MenuService
     // D-03: Довгий метод (LOC ~ 65, CC = 14, глибина вкладеності 5)
     // D-04: Магічні числа (0.10m, 0.15m)
     // D-12: Довгий ланцюг if-else
-    // Прорізано шов (Seam) через введення опціонального параметра DateTimeOffset? now = null
+    // R06: Replace Nested Conditional with Guard Clauses
     public decimal Total(Order order, string promoCode = "", DateTimeOffset? now = null)
     {
-        if (order != null)
-        {
-            if (order.Lines != null)
-            {
-                if (order.Lines.Count > 0)
-                {
-                    // R10: Move Method - розрахунок суми винесено в Order.CalculateSubtotal()
-                    decimal sum = order.CalculateSubtotal();
-
-                    // Happy hour check: 14:00 - 16:00
-                    var currentTime = now ?? DateTimeOffset.Now;
-                    var currentHour = currentTime.Hour;
-                    if (currentHour >= 14)
-                    {
-                        if (currentHour < 16)
-                        {
-                            sum -= sum * HappyHourDiscountRate;
-                        }
-                    }
-
-                    // R04: Замінено 0.10 на ServiceFeeRate
-                    if (order.Lines.Count > ServiceFeeItemThreshold)
-                    {
-                        sum += sum * ServiceFeeRate;
-                    }
-
-                    if (!string.IsNullOrEmpty(promoCode))
-                    {
-                        decimal promoDiscount = _discountCalculator.CalculatePromoDiscount(promoCode, sum);
-                        sum -= promoDiscount;
-                        if (sum < 0)
-                        {
-                            sum = 0;
-                        }
-                    }
-
-                    return sum;
-                }
-                else
-                {
-                    return 0m;
-                }
-            }
-            else
-            {
-                return 0m;
-            }
-        }
-        else
+        if (order == null || order.Lines == null || order.Lines.Count == 0)
         {
             return 0m;
         }
+
+        // R10: Move Method - розрахунок суми винесено в Order.CalculateSubtotal()
+        decimal sum = order.CalculateSubtotal();
+
+        // Happy hour check: 14:00 - 16:00
+        var currentTime = now ?? DateTimeOffset.Now;
+        var currentHour = currentTime.Hour;
+        if (currentHour >= 14 && currentHour < 16)
+        {
+            sum -= sum * HappyHourDiscountRate;
+        }
+
+        // R04: Замінено 0.10 на ServiceFeeRate
+        if (order.Lines.Count > ServiceFeeItemThreshold)
+        {
+            sum += sum * ServiceFeeRate;
+        }
+
+        if (!string.IsNullOrEmpty(promoCode))
+        {
+            decimal promoDiscount = _discountCalculator.CalculatePromoDiscount(promoCode, sum);
+            sum -= promoDiscount;
+            if (sum < 0)
+            {
+                sum = 0;
+            }
+        }
+
+        return sum;
     }
 
-    // D-08: Глибока вкладеність (5 рівнів)
+    // R06: Replace Nested Conditional with Guard Clauses
     public bool ValidateOrder(Order order)
     {
-        if (order != null)
+        if (order == null || order.Lines == null || order.Lines.Count == 0)
         {
-            if (order.Lines != null)
-            {
-                if (order.Lines.Count > 0)
-                {
-                    if (order.Status != OrderStatus.Cancelled)
-                    {
-                        foreach (var line in order.Lines)
-                        {
-                            if (line.Quantity <= 0 || line.Product == null || line.Product.Price < 0)
-                            {
-                                return false;
-                            }
-                        }
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
+            return false;
+        }
+
+        if (order.Status == OrderStatus.Cancelled)
+        {
+            return false;
+        }
+
+        foreach (var line in order.Lines)
+        {
+            if (line.Quantity <= 0 || line.Product == null || line.Product.Price < 0)
             {
                 return false;
             }
         }
-        else
-        {
-            return false;
-        }
+
+        return true;
     }
 
     // D-05: Дублювання форматування
