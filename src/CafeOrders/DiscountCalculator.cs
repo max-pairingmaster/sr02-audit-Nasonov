@@ -28,29 +28,25 @@ public class DiscountCalculator
         return 0m;
     }
 
-    // D-12: Довгий ланцюг if-else
+    // R08: Replace Conditional with Table (Tiers)
+    private static readonly (int MinPoints, string Tier)[] LoyaltyTierTable =
+    {
+        (1000, "Platinum"),
+        (500, "Gold"),
+        (200, "Silver"),
+        (50, "Bronze")
+    };
+
     public string GetLoyaltyTier(int points)
     {
-        if (points >= 1000)
+        foreach (var (minPoints, tier) in LoyaltyTierTable)
         {
-            return "Platinum";
+            if (points >= minPoints)
+            {
+                return tier;
+            }
         }
-        else if (points >= 500)
-        {
-            return "Gold";
-        }
-        else if (points >= 200)
-        {
-            return "Silver";
-        }
-        else if (points >= 50)
-        {
-            return "Bronze";
-        }
-        else
-        {
-            return "Standard";
-        }
+        return "Standard";
     }
 
     // CC = 9, вкладеність 4
