@@ -30,19 +30,8 @@ public class MenuService
             {
                 if (order.Lines.Count > 0)
                 {
-                    decimal sum = 0m;
-
-                    // D-01: Заздрість до чужих даних (Feature Envy)
-                    foreach (var line in order.Lines)
-                    {
-                        if (line.Product != null)
-                        {
-                            if (line.Quantity > 0)
-                            {
-                                sum += line.Product.Price * line.Quantity;
-                            }
-                        }
-                    }
+                    // R10: Move Method - розрахунок суми винесено в Order.CalculateSubtotal()
+                    decimal sum = order.CalculateSubtotal();
 
                     // Happy hour check: 14:00 - 16:00
                     var currentTime = now ?? DateTimeOffset.Now;

@@ -26,6 +26,9 @@ public class Order
         }
     }
 
+    // R10: Move Method (сумування рядків у Order)
+    public decimal CalculateSubtotal() => _lines.Sum(l => l.Subtotal);
+
     // D-09: Тимчасове поле (_tempCalc)
     private decimal _tempCalc;
 
