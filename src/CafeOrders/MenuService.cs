@@ -7,6 +7,10 @@ public class MenuService
     public const decimal ServiceFeeRate = 0.10m;
     public const decimal HappyHourDiscountRate = 0.15m;
     public const int ServiceFeeItemThreshold = 5;
+    public const decimal DefaultTaxRate = 0.07m;
+
+    // R15: Replace Temp with Query (GetTaxRate)
+    public decimal GetTaxRate() => DefaultTaxRate;
 
     private readonly DiscountCalculator _discountCalculator;
     private readonly DatabaseDummy _database;
@@ -136,7 +140,7 @@ public class MenuService
 
     public decimal CalculateTax(decimal amount)
     {
-        // 7% tax rate
-        return decimal.Round(amount * 0.07m, 2);
+        // R15: Replace Temp with Query
+        return decimal.Round(amount * GetTaxRate(), 2);
     }
 }
